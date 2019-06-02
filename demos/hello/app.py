@@ -5,7 +5,7 @@
 # @Site    : 
 # @File    : app.py
 # @Software: PyCharm
-from flask import Flask, url_for, make_response, redirect
+from flask import Flask, url_for, make_response, redirect, request
 import click
 
 app = Flask(__name__)
@@ -29,6 +29,14 @@ def reback(name):
     resp = make_response(redirect(url_for('index', name=name)))
     resp.set_cookie('name', name)
     return resp
+
+
+@app.route('/hello2/')
+def hello2():
+    name = request.args.get('name')
+    if name is None:
+        name = request.cookies.get('name', 'cookie')
+    return '<h1>hello2, %s</h1>' % name
 
 
 if __name__ == '__main__':
