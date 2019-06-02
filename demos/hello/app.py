@@ -5,7 +5,7 @@
 # @Site    : 
 # @File    : app.py
 # @Software: PyCharm
-from flask import Flask, url_for, make_response, redirect, request
+from flask import Flask, url_for, make_response, redirect, request, session
 import click
 
 app = Flask(__name__)
@@ -16,7 +16,15 @@ app.config["SECRET_KEY"] = '4aa8-a690-ca241dfde751'
 @app.route('/hello', defaults={'name': 'world'})
 @app.route('/hello/<name>')
 def index(name):
-    return '<h1>Hello %s</h1>' % url_for('index', name=name, _external=True)
+    name = request.args.get('name')
+    if name is None:
+        name = request.cookies.get('name', 'cookies')
+    resp = '<h1>Hello %s</h1>' % url_for('index', name=name, _external=True)
+    if 'logged_in' in session:
+        resp += '[Authenticated]'
+    else:
+        resp += '[No Authenticated]'
+    return resp
 
 
 @app.cli.command()
@@ -37,6 +45,12 @@ def hello2():
     if name is None:
         name = request.cookies.get('name', 'cookie')
     return '<h1>hello2, %s</h1>' % name
+
+
+@app.route('/login')
+def login():
+    session['logged_in'] = True
+    return redirect(url_for('index'))
 
 
 if __name__ == '__main__':
