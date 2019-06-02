@@ -5,7 +5,7 @@
 # @Site    : 
 # @File    : app.py
 # @Software: PyCharm
-from flask import Flask, url_for, make_response, redirect, request, session
+from flask import Flask, url_for, make_response, redirect, request, session, abort
 import click
 
 app = Flask(__name__)
@@ -51,6 +51,42 @@ def hello2():
 def login():
     session['logged_in'] = True
     return redirect(url_for('index'))
+
+
+@app.route('/admin')
+def admin():
+    if 'logged_in' not in session:
+        abort(403)
+    return 'welcome to admin page'
+
+
+@app.route('/logout')
+def logout():
+    if 'logged_in' in session:
+        session.pop('logged_in')
+    return redirect(url_for('index'))
+
+
+@app.route('/foo')
+def foo():
+    return '<h1>Foo Page<h1><a href="%s">do something and redirect</a>' % url_for('do_something', next=request.full_path)
+
+
+@app.route('/bar')
+def bar():
+    return '<h1>Bar page</h1><a href="%s">do something and redirect</a>' % url_for('do_something', next=request.full_path)
+
+
+@app.route('/do_something')
+def do_something():
+    return redirect_back()
+
+
+def redirect_back(default='index', **kwargs):
+    for target in request.args.get('next'), request.referrer:
+        if target:
+            return redirect(target)
+    return redirect(url_for(default, **kwargs))
 
 
 if __name__ == '__main__':
