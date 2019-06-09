@@ -130,5 +130,5 @@ dmypy.json
 Pipfile
 Pipfile.lock
 demos/.DS_Store
-static/
-templates/
+#static/
+#templates/
