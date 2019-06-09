@@ -5,7 +5,7 @@
 # @Site    : 
 # @File    : app.py
 # @Software: PyCharm
-from flask import Flask, url_for, make_response, redirect, request, session, abort
+from flask import Flask, url_for, make_response, redirect, request, session, abort, flash, render_template
 import click
 from urllib.parse import urlparse, urljoin
 from flask_script import Manager
@@ -23,7 +23,7 @@ def index(name):
     name = request.args.get('name')
     if name is None:
         name = request.cookies.get('name', 'cookies')
-    resp = '<h1>Hello %s</h1>' % url_for('index', name=name, _external=True)
+    resp = render_template('base.html')
     if 'logged_in' in session:
         resp += '[Authenticated]'
     else:
@@ -122,6 +122,12 @@ def show_post():
 @app.route('/more')
 def load_post():
     return generate_lorem_ipsum(n=1)
+
+
+@app.route('/flash')
+def just_flash():
+    flash('I am flash, who is looking for me?')
+    return redirect(url_for('index'))
 
 
 if __name__ == '__main__':
