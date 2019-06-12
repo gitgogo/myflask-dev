@@ -10,8 +10,10 @@ import click
 from urllib.parse import urlparse, urljoin
 from flask_script import Manager
 from jinja2.utils import generate_lorem_ipsum
+from app.views import blue
 
 app = Flask(__name__)
+app.register_blueprint(blue)
 # 配置变量
 app.config["SECRET_KEY"] = '4aa8-a690-ca241dfde751'
 manager = Manager(app=app)
@@ -128,6 +130,11 @@ def load_post():
 def just_flash():
     flash('I am flash, who is looking for me?')
     return redirect(url_for('index'))
+
+
+@app.errorhandler(404)
+def page404(e):
+    return render_template('errors/404.html'), 404
 
 
 if __name__ == '__main__':
