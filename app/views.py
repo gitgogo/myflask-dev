@@ -19,3 +19,8 @@ blue = Blueprint('first_blue', __name__)
 @blue.route('/hello404')
 def hello404():
     return render_template('errors/404.html')
+
+
+@blue.route('/login_form', methods=['GET', 'POST'])
+def login_form():
+    return render_template('login.html')
