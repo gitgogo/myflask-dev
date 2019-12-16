@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Base-Title</title>
+</head>
+{% block content %}
+<p>柱模板 base.html</p>
+{% endblock %}
+
+<body>
+<h1>hello, {{ url_for('index', name=name, _external=True) }}</h1>
+<p>
+    {% for msg in get_flashed_messages() %}
+        <div class="alert">{{ msg }}</div>
+    {% endfor %}
+</p>
+<br>
+</body>
+</html>
